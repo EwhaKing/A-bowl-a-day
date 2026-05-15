@@ -1,0 +1,52 @@
+using UnityEngine;
+using System.Collections;
+
+public class CustomerManager : MonoBehaviour
+{
+    public OrderData[] availableOrders;
+    public float spawnInterval = 10f;
+
+    private OrderData currentOrder;
+
+    public OrderData GetCurrentOrder()
+    {
+        return currentOrder;
+    }
+
+    void Start()
+    {
+        StartCoroutine(SpawnRoutine());
+    }
+
+    IEnumerator SpawnRoutine()
+    {
+        while (true)
+        {
+            SpawnCustomer();
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    void SpawnCustomer()
+    {
+        if (availableOrders.Length == 0) return;
+        currentOrder = availableOrders[Random.Range(0, availableOrders.Length)];
+        Debug.Log("º’¥‘ µÓ¿Â! ¡÷πÆ: ∂±∫∫¿Ã");
+        StartCoroutine(CustomerTimer());
+    }
+
+    IEnumerator CustomerTimer()
+    {
+        yield return new WaitForSeconds(currentOrder.timeLimit);
+        Debug.Log("Ω√∞£ √ ∞˙! º’¥‘ ≈¿Â");
+        currentOrder = null;
+    }
+
+    public void CustomerLeave(bool success)
+    {
+        StopAllCoroutines();
+        currentOrder = null;
+        Debug.Log(success ? "º∫∞¯! º’¥‘ ∏∏¡∑" : "Ω«∆–! º’¥‘ ∫“∏∏¡∑");
+        StartCoroutine(SpawnRoutine());
+    }
+}
