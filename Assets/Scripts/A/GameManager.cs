@@ -1,5 +1,6 @@
 // Assets/Scripts/Core/GameManager.cs
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -97,5 +98,11 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void EndDay()
+    {
+        RevenueManager.Instance.SaveData();
+        SceneManager.LoadScene("DaySummary");
     }
 }

@@ -43,10 +43,28 @@ public class Plate : DraggableObject
         if (_isPlated && other.CompareTag("DropZone"))
         {
             StopAllCoroutines();
-            transform.position = other.transform.position;
+
+            transform.position =
+                other.transform.position;
+
             CanDrag = false;
-            GameManager.Instance.SetState(GameState.Complete);
-            UIManager.Instance.ShowResult(CookResult.Perfect);
+
+            GameManager.Instance.SetState(
+                GameState.Complete
+            );
+
+            // C 파트: 수익 처리
+            RevenueManager.Instance.SuccessOrder(5000);
+
+            UIManager.Instance.ShowResult(
+                CookResult.Perfect
+            );
+
+            JudgeSystem.Instance.HandleResult(true);
+
+            Debug.Log(
+                "배달 성공 / 수익 +5000"
+            );
         }
     }
 }
