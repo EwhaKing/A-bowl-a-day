@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrderData
   dishName: Tteokbokki
   timeLimit: 30
+  customerDialogue: Hello! One tteokbokki please!

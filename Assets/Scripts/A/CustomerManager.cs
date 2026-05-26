@@ -33,8 +33,15 @@ public class CustomerManager : MonoBehaviour
         currentOrder = availableOrders[Random.Range(0, availableOrders.Length)];
         Debug.Log("º’¥‘ µÓ¿Â! ¡÷πÆ: ∂±∫∫¿Ã");
         // 2∞≥ °Ê 1∞≥∑Œ πŸ≤Ÿ±‚
-        DialogueUI.Instance.Show(currentOrder.dishName);
+        DialogueUI.Instance.Show(currentOrder.customerDialogue, "Customer");
+        Invoke("HideDialogue", 3f);
+
         StartCoroutine(CustomerTimer());
+    }
+
+    void HideDialogue()
+    {
+        DialogueUI.Instance.Hide();
     }
 
     IEnumerator CustomerTimer()
