@@ -5,4 +5,5 @@ public class OrderData : ScriptableObject
 {
     public string dishName;
     public float timeLimit = 30f;
+    [TextArea] public string customerDialogue;
 }

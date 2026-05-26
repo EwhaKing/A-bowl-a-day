@@ -32,6 +32,8 @@ public class CustomerManager : MonoBehaviour
         if (availableOrders.Length == 0) return;
         currentOrder = availableOrders[Random.Range(0, availableOrders.Length)];
         Debug.Log("º’¥‘ µÓ¿Â! ¡÷πÆ: ∂±∫∫¿Ã");
+        // 2∞≥ °Ê 1∞≥∑Œ πŸ≤Ÿ±‚
+        DialogueUI.Instance.Show(currentOrder.dishName);
         StartCoroutine(CustomerTimer());
     }
 
