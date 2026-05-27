@@ -1,41 +1,80 @@
-// Assets/Scripts/Interactable/GasStove.cs
 using UnityEngine;
 
 public class GasStove : MonoBehaviour
 {
-    [Header("불꽃 스프라이트 설정")]
-    [SerializeField] private SpriteRenderer flameRenderer;
-    [SerializeField] private Sprite sprFlameOff;
-    [SerializeField] private Sprite sprFlameHigh;
-    [SerializeField] private Sprite sprFlameLow;
+    public enum StoveState { Off, High, Low }
+    public StoveState currentState = StoveState.Off;
 
-    [SerializeField] private GameObject potObject; // Pot_Root 연동
+    [Header("--- 불꽃 오브젝트 설정 ---")]
+    public SpriteRenderer flameRenderer;
+    public Sprite flameOff;
+    public Sprite flameHigh;
+    public Sprite flameLow;
 
-    private int _clickCount = 0;
+    [Header("--- 가스레인지 본체/레버 설정 ---")]
+    [HideInInspector] // 이제 인스펙터에서 드래그 안 해도 되므로 숨깁니다.
+    public SpriteRenderer stoveRenderer;
+    public Sprite stoveOff;
+    public Sprite stoveHigh;
+    public Sprite stoveLow;
+
+    void Awake()
+    {
+        // [자동 할당] 스크립트가 붙어있는 오브젝트에서 SpriteRenderer를 자동으로 찾아옵니다.
+        if (stoveRenderer == null)
+        {
+            stoveRenderer = GetComponent<SpriteRenderer>();
+        }
+    }
 
     void Start()
     {
-        flameRenderer.sprite = sprFlameOff;
+        // 혹시나 flameRenderer도 비어있다면 자식 오브젝트에서 찾아주는 예외 처리
+        if (flameRenderer == null)
+        {
+            flameRenderer = transform.Find("Flame_Sprite")?.GetComponent<SpriteRenderer>();
+        }
+
+        UpdateStoveVisual();
     }
 
-    // 마우스로 가스버너 오브젝트 자체를 클릭할 때 작동
     void OnMouseDown()
     {
-        // 1. 첫 번째 클릭: 불 켜기 (Idle 상태일 때만 가능)
-        if (_clickCount == 0 && GameManager.Instance.CurrentState == GameState.Idle)
+        if (currentState == StoveState.Off)
+            currentState = StoveState.High;
+        else if (currentState == StoveState.High)
+            currentState = StoveState.Low;
+        else
+            currentState = StoveState.Off;
+
+        UpdateStoveVisual();
+    }
+
+    void UpdateStoveVisual()
+    {
+        // 안전 장치: 컴포넌트가 존재할 때만 이미지를 바꾸도록 체크
+        if (flameRenderer != null)
         {
-            _clickCount = 1;
-            flameRenderer.sprite = sprFlameHigh;
-            potObject.SetActive(true); // 냄비 등장
-            GameManager.Instance.SetState(GameState.GasOn_High);
+            switch (currentState)
+            {
+                case StoveState.Off: flameRenderer.sprite = flameOff; break;
+                case StoveState.High: flameRenderer.sprite = flameHigh; break;
+                case StoveState.Low: flameRenderer.sprite = flameLow; break;
+            }
         }
-        // 2. 두 번째 클릭: 불 줄이기 (조리 시작된 강불 상태에서만 가능)
-        else if (_clickCount == 1 && GameManager.Instance.CurrentState == GameState.Cooking_HighFlame)
+
+        if (stoveRenderer != null)
         {
-            _clickCount = 2;
-            flameRenderer.sprite = sprFlameLow;
-            GameManager.Instance.TimeSinceLastAction = 0f; // 타는 타이머 초기화
-            GameManager.Instance.SetState(GameState.Cooking_LowFlame);
+            switch (currentState)
+            {
+                case StoveState.Off: stoveRenderer.sprite = stoveOff; break;
+                case StoveState.High: stoveRenderer.sprite = stoveHigh; break;
+                case StoveState.Low: stoveRenderer.sprite = stoveLow; break;
+            }
+        }
+        else
+        {
+            Debug.LogError($"{gameObject.name} 오브젝트에 SpriteRenderer 컴포넌트가 없습니다!");
         }
     }
 }
