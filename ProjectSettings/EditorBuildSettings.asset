@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Prologue.unity
     guid: 1ab7aa6b76cf88a49a55847f21e31451
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: b84b8bdc9725f0b4f904f7d01c085c27
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
